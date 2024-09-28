@@ -1,10 +1,18 @@
 package com.fs.pos.relationalmanager.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import org.hibernate.annotations.CreationTimestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -18,6 +26,20 @@ public class User {
     private int age;
     private String email;
     private String phone;
+
+    @CreationTimestamp
+    private Timestamp updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Investor> investors;
+
+    public List<Investor> getInvestors() {
+        return investors;
+    }
+
+    public void setInvestors(ArrayList<Investor> investors) {
+        this.investors = investors;
+    }
 
     // Getters and Setters
     public Long getId() {

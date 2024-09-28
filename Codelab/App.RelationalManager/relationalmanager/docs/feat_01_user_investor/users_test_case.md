@@ -1,3 +1,13 @@
+# Create User
+1. OK 200
+2. Email, phone exist in DB --> ...
+3. Email, phone not correct format
+4. (later) permission
+5. (network) need rollback
+
+
+
+
 # Test Cases for CRUD Users
 
 ## Test Case 1: Create User

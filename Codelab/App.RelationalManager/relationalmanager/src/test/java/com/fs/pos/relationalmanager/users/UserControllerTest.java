@@ -1,5 +1,6 @@
-package com.fs.pos.relationalmanager.controller;
+package com.fs.pos.relationalmanager.users;
 
+import com.fs.pos.relationalmanager.controller.UserController;
 import com.fs.pos.relationalmanager.entities.User;
 import com.fs.pos.relationalmanager.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +42,11 @@ public class UserControllerTest {
     void setUp() {
         user = new User();
         user.setId(1L);
-        user.setName("John Doe");
+        user.setFirstname("John");
+        user.setLastname("Doe");
+        user.setUsername("john.doe");
+        user.setAge(30);
+        user.setPhone("0912 106 550");
         user.setEmail("john.doe@example.com");
     }
 
@@ -54,7 +59,7 @@ public class UserControllerTest {
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
-                .andExpect(jsonPath("$.name").value(user.getName()))
+                .andExpect(jsonPath("$.username").value(user.getUsername()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
     }
 
@@ -65,7 +70,8 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
-                .andExpect(jsonPath("$.name").value(user.getName()))
+                .andExpect(jsonPath("$.firstname").value(user.getFirstname()))
+                .andExpect(jsonPath("$.lastname").value(user.getLastname()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
     }
 
@@ -76,7 +82,7 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(user.getId()))
-                .andExpect(jsonPath("$[0].name").value(user.getName()))
+                .andExpect(jsonPath("$[0].username").value(user.getUsername()))
                 .andExpect(jsonPath("$[0].email").value(user.getEmail()));
     }
 
@@ -89,7 +95,7 @@ public class UserControllerTest {
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId()))
-                .andExpect(jsonPath("$.name").value(user.getName()))
+                .andExpect(jsonPath("$.username").value(user.getUsername()))
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
     }
 

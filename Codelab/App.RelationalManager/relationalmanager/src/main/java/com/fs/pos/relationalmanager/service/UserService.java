@@ -23,6 +23,19 @@ public class UserService {
 
 
         // 3. Save the user to the database
+        // throw exception if user already exists
+        Optional<User> existingUser = Optional.ofNullable(userRepository.findByEmail(user.getEmail()));
+        if (existingUser.isPresent()) {
+            // Log the user creation attempt to the audit log
+            System.out.println("Attempt to create user failed. Email: " + user.getEmail() + ", User ID: " + user.getId());
+
+            throw new RuntimeException("User with email " + user.getEmail() + " already exists");
+        }
+
+        
+
+
+
         return userRepository.save(user);
     }
 
