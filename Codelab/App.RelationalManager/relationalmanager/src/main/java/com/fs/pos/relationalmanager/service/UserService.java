@@ -49,21 +49,43 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    // Update a user
+    /**
+     * Updates the user with the specified ID using the provided user details.
+     *
+     * @param id the ID of the user to update.
+     * @param userDetails the new details of the user.
+     *            username: required
+     *            phone: required
+     * @return the updated user.
+     * @throws RuntimeException if the user with the specified ID is not found.
+     *
+     * Example usage:
+     * <pre>
+     * {@code
+     * User userDetails = new User();
+     * userDetails.setUsername("newUsername");
+     * userDetails.setFirstname("John");
+     * userDetails.setLastname("Doe");
+     * userDetails.setPhone("1234567890");
+     * userDetails.setEmail("john.doe@example.com");
+     * userDetails.setAge(30);
+     *
+     * User updatedUser = userService.updateUser(1L, userDetails);
+     * }
+     * </pre>
+     */
     public User updateUser(Long id, User userDetails) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setUsername(userDetails.getUsername());
-            user.setFirstname(userDetails.getFirstname());
-            user.setLastname(userDetails.getLastname());
-            user.setPhone(userDetails.getPhone());
-            user.setEmail(userDetails.getEmail());
-            user.setAge(userDetails.getAge());
-            return userRepository.save(user);
-        } else {
-            throw new RuntimeException("User not found with id " + id);
-        }
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setUsername(userDetails.getUsername());
+                    user.setFirstname(userDetails.getFirstname());
+                    user.setLastname(userDetails.getLastname());
+                    user.setPhone(userDetails.getPhone());
+                    user.setEmail(userDetails.getEmail());
+                    user.setAge(userDetails.getAge());
+                    return userRepository.save(user);
+                })
+                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
 
     // Delete a user

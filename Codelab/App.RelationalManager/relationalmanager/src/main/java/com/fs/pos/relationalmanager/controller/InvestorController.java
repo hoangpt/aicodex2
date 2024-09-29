@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/investors")
+@CrossOrigin(origins = "*")
 public class InvestorController {
     @Autowired
     private InvestorService investorService;

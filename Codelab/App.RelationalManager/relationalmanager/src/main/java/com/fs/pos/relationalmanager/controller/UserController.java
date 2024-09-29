@@ -77,4 +77,12 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    // return user special that has role of admin
+    @GetMapping("/admin")
+    public ResponseEntity<User> getAdmin() {
+        // TODO: implement this
+        User admin = new User();
+        return ResponseEntity.ok(admin);
+    }
 }

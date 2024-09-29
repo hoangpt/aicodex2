@@ -1,0 +1,8 @@
+# CRUD Users Use Case
+
+| **Use Case** | **Description** | **HTTP Method** | **Endpoint** | **Request Body** | **Response** |
+|--------------|-----------------|-----------------|--------------|------------------|--------------|
+| Create User  | Register a new user with unique email and password. | POST | /users | { "email": "user@example.com", "password": "password123" } | 201 Created { "id": 1, "email": "user@example.com" } |
+| Read User    | Retrieve user details by user ID. | GET | /users/{id} | N/A | 200 OK { "id": 1, "email": "user@example.com", "name": "John Doe", "contactDetails": "123-456-7890", "profilePicture": "url" } |
+| Update User  | Update user profile information. | PUT | /users/{id} | { "name": "John Doe", "contactDetails": "123-456-7890", "profilePicture": "url" } | 200 OK { "id": 1, "email": "user@example.com", "name": "John Doe", "contactDetails": "123-456-7890", "profilePicture": "url" } |
+| Delete User  | Delete a user by user ID. | DELETE | /users/{id} | N/A | 204 No Content |

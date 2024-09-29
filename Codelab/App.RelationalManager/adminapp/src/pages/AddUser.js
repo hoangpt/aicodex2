@@ -1,55 +1,8 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import React from 'react';
+import useAddUser from '../hooks/useAddUser';
 
 function AddUser() {
-    const [formData, setFormData] = useState({
-        username: '',
-        firstname: '',
-        lastname: '',
-        phone: '',
-        email: '',
-        age: ''
-    });
-
-    const notifySuccess = () => {
-        toast.success('User added successfully!', {
-            // position: toast.POSITION.TOP_RIGHT,
-            autoClose: 5000,
-        });
-    };
-
-    const [errors, setErrors] = useState({});
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const validate = () => {
-        let tempErrors = {};
-        tempErrors.username = formData.username ? "" : "Username is required.";
-        tempErrors.phone = formData.phone ? (formData.phone.match(/^\d{10}$/) ? "" : "Phone must be 10 digits.") : "Phone is required.";
-        setErrors(tempErrors);
-        return Object.values(tempErrors).every(x => x === "");
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (validate()) {
-            try {
-                const response = await axios.post('http://localhost:8080/api/users', formData);
-                if (response.status === 200) {
-                    notifySuccess();
-                }
-                console.log('User added:', response.data);
-            } catch (error) {
-                console.error('There was an error adding the user!', error);
-            }
-        }
-    };
+    const { errors, handleSubmit, handleChange, formData } = useAddUser();
 
     return (
         <div className="add-user-container">
@@ -64,7 +17,7 @@ function AddUser() {
                         onChange={handleChange}
                         className="form-control form-input"
                     />
-                    {errors.username && <p className="error-text">{errors.username}</p>}
+                    {errors.username && <p className="error-text" style={{ color: 'red' }}>{errors.username}</p>}
                 </div>
                 <div className="form-group">
                     <label className="form-label">Firstname</label>
@@ -95,7 +48,7 @@ function AddUser() {
                         onChange={handleChange}
                         className="form-control form-input"
                     />
-                    {errors.phone && <p className="error-text">{errors.phone}</p>}
+                    {errors.phone && <p className="error-text" style={{ color: 'red' }}>{errors.phone}</p>}
                 </div>
                 <div className="form-group">
                     <label className="form-label">Email</label>

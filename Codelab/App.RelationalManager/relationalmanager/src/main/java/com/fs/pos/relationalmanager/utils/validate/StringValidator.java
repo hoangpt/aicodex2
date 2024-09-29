@@ -10,6 +10,9 @@ public class StringValidator {
     }
 
     public static boolean isUsernameInvalid(String username) {
+        //sanitized input
+        username = username.trim();
+
         return username.length() < 6 || username.length() > 50;
     }
 

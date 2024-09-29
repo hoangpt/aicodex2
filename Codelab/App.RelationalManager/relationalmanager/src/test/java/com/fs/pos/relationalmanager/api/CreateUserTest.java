@@ -12,9 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -23,6 +20,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 public class CreateUserTest {
+    // Init an array: username input, expected output
+    // build array of objecr from golden data from QC Engineer
+
+
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -59,7 +61,27 @@ public class CreateUserTest {
                 .andExpect(jsonPath("$.email").value(user.getEmail()));
     }
 
+    @Test
+    void createUser_withEmptyUsername() throws Exception {
+        user.setUsername(""); // Empty username
 
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Username must be between 6 and 50 characters"));
+    }
+
+    @Test
+    void createUser_withEmptyUsername_ContainSpace() throws Exception {
+        user.setUsername("          "); // Empty username
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Username must be between 6 and 50 characters"));
+    }
 
     @Test
     void createUser_withInvalidUsername() throws Exception {
@@ -92,5 +114,27 @@ public class CreateUserTest {
                         .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Phone is invalid"));
+    }
+
+    @Test
+    void createUser_withExistingUserbyEmail() throws Exception {
+        given(userService.createUser(any(User.class))).willThrow(new RuntimeException("User with email " + user.getEmail() + " already exists"));
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("User with email " + user.getEmail() + " already exists"));
+    }
+
+    @Test
+    void createUser_withExistingUserbyPhone() throws Exception {
+        given(userService.createUser(any(User.class))).willThrow(new RuntimeException("User with email " + user.getEmail() + " already exists"));
+
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("User with email " + user.getEmail() + " already exists"));
     }
 }
