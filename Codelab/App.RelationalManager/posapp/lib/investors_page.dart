@@ -55,15 +55,19 @@ class InvestorsPage extends StatelessWidget {
             final investors = snapshot.data!;
             return ListView.builder(
               itemCount: investors.length,
-              itemBuilder: (context, index) {
-                return ListTile(
+                itemBuilder: (context, index) {
+                final color = index % 2 == 0 ? Colors.white : Colors.grey[200];
+                return Container(
+                  color: color,
+                  child: ListTile(
                   title: Text(investors[index].name),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Phone: ${investors[index].phone}'),
-                      Text('Entity No: ${investors[index].entityNo}'),
+                    Text('Phone: ${investors[index].phone}'),
+                    Text('Entity No: ${investors[index].entityNo}'),
                     ],
+                  ),
                   ),
                 );
               },

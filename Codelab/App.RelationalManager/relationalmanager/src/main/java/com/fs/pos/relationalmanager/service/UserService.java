@@ -59,6 +59,7 @@ public class UserService {
      * @return the updated user.
      * @throws RuntimeException if the user with the specified ID is not found.
      *
+     * @author Team Fsoft
      * Example usage:
      * <pre>
      * {@code
