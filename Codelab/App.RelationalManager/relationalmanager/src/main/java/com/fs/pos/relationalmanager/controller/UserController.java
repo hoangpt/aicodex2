@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
@@ -40,17 +41,10 @@ public class UserController {
         }
 
         // validate format phone
-        // example: Vietnam 0912106550 --> valid
-        // example: Vietnam 091210655 --> invalid
-        // example: Vietnam +84912106550 --> valid
-        // example: Singapore +56912106 --> valid
-        // example: Singapore +569121065 --> invalid
         if (StringValidator.isPhoneInvalid("Vietnam", user.getPhone())) {
             return ResponseEntity.badRequest().body("Phone is invalid");
         }
 
-        
-        
         // 2. Delivery
         User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);

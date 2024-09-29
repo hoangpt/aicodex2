@@ -18,6 +18,12 @@ public class StringValidator {
      * wrapper function for phone validation
      * @param countryName
      * @param phone
+        * example: Vietnam 0912106550 --> valid
+        * example: Vietnam 091210655 --> invalid
+        * example: Vietnam +84912106550 --> valid
+        * example: Singapore +56912106 --> valid
+        * example: Singapore +569121065 --> invalid
+     *
      * @return
      */
     public static boolean isPhoneInvalid(String countryName, String phone) {
