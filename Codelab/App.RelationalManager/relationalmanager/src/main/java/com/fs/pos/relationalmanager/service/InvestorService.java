@@ -26,7 +26,7 @@ public class InvestorService {
     }
 
     // Get all investors
-    public List<Investor> getAllInvestors(Long userId) {
+    public List<Investor> getAllInvestors() {
         // If user is Agent, show only investor belong to this Agent
         // user.type = 'Agent' --> getByUserId(1)
 

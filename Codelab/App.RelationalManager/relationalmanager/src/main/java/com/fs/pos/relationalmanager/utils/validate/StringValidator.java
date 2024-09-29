@@ -22,7 +22,7 @@ public class StringValidator {
      */
     public static boolean isPhoneInvalid(String countryName, String phone) {
         if (countryName == null) {
-            return true;
+            countryName = "Vietnam";
         }
 
         if (countryName.equals("Vietnam")) {

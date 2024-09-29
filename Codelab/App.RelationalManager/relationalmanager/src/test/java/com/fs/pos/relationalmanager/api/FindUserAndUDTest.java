@@ -1,4 +1,4 @@
-package com.fs.pos.relationalmanager.users;
+package com.fs.pos.relationalmanager.api;
 
 import com.fs.pos.relationalmanager.controller.UserController;
 import com.fs.pos.relationalmanager.entities.User;
@@ -6,9 +6,6 @@ import com.fs.pos.relationalmanager.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+public class FindUserAndUDTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,18 +47,6 @@ public class UserControllerTest {
         user.setEmail("john.doe@example.com");
     }
 
-    @Test
-    void createUser() throws Exception {
-        given(userService.createUser(any(User.class))).willReturn(user);
-
-        mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(user.getId()))
-                .andExpect(jsonPath("$.username").value(user.getUsername()))
-                .andExpect(jsonPath("$.email").value(user.getEmail()));
-    }
 
     @Test
     void getUserById() throws Exception {
