@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Investor {
   final String name;
@@ -9,12 +11,28 @@ class Investor {
 }
 
 class InvestorsPage extends StatelessWidget {
-  final List<Investor> investors = [
-    Investor(name: 'Investor 1', phone: '123-456-7890', entityNo: 'E001'),
-    Investor(name: 'Investor 2', phone: '234-567-8901', entityNo: 'E002'),
-    Investor(name: 'Investor 3', phone: '345-678-9012', entityNo: 'E003'),
-    Investor(name: 'Investor 4', phone: '456-789-0123', entityNo: 'E004'),
-  ];
+  Future<List<Investor>> fetchInvestors() async {
+    final response = await http.get(Uri.parse('http://localhost:8080/api/investors'));
+    List<Investor> investors = [];
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      // String test = '[{"name":"John Doe","phone":"1234567890","entityNo":"123456"},{"name":"Jane Doe","phone":"0987654321","entityNo":"654321"}]';
+      // data = jsonDecode(test);
+      investors = data.map((item) => item as Map<String, dynamic>).map((item) {
+        return Investor(
+          name: item['name'] ?? '',
+          phone: item['phone'] ?? '',
+          entityNo: item['entityNo'] ?? '',
+        );
+      }).cast<Investor>().toList();
+    } else {
+      throw Exception('Server down');
+    }
+
+    print('Investors List: ${investors}');
+    return investors;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +40,35 @@ class InvestorsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Investors'),
       ),
-      body: ListView.builder(
-        itemCount: investors.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(investors[index].name),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Phone: ${investors[index].phone}'),
-                Text('Entity No: ${investors[index].entityNo}'),
-              ],
-            ),
-          );
+      body: FutureBuilder<List<Investor>>(
+        future: fetchInvestors(),
+        builder: (context, snapshot) {
+          print(snapshot.data);
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Failed to load investors'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No investors found'));
+          } else {
+            final investors = snapshot.data!;
+            return ListView.builder(
+              itemCount: investors.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(investors[index].name),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Phone: ${investors[index].phone}'),
+                      Text('Entity No: ${investors[index].entityNo}'),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
         },
       ),
     );
