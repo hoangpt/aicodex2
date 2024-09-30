@@ -11,14 +11,14 @@ class Investor {
 }
 
 class InvestorsPage extends StatelessWidget {
+  const InvestorsPage({super.key});
+
   Future<List<Investor>> fetchInvestors() async {
     final response = await http.get(Uri.parse('http://localhost:8080/api/investors'));
     List<Investor> investors = [];
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      // String test = '[{"name":"John Doe","phone":"1234567890","entityNo":"123456"},{"name":"Jane Doe","phone":"0987654321","entityNo":"654321"}]';
-      // data = jsonDecode(test);
       investors = data.map((item) => item as Map<String, dynamic>).map((item) {
         return Investor(
           name: item['name'] ?? '',
@@ -30,7 +30,6 @@ class InvestorsPage extends StatelessWidget {
       throw Exception('Server down');
     }
 
-    print('Investors List: ${investors}');
     return investors;
   }
 
@@ -38,19 +37,17 @@ class InvestorsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Investors'),
+        title: const Text('Investors'),
       ),
       body: FutureBuilder<List<Investor>>(
         future: fetchInvestors(),
         builder: (context, snapshot) {
-          print(snapshot.data);
-
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Failed to load investors'));
+            return const Center(child: Text('Failed to load investors'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No investors found'));
+            return const Center(child: Text('No investors found'));
           } else {
             final investors = snapshot.data!;
             return ListView.builder(
